@@ -7,6 +7,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+/**
+ * Class represents ticket that contains all obligatory information user should provide
+ * This entity is stored in database
+ */
 @Data
 @Document(collection = "tickets")
 @Builder

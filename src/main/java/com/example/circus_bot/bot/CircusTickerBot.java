@@ -11,6 +11,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 import static org.telegram.abilitybots.api.util.AbilityUtils.getChatId;
 
+/**
+ * This class represents the bot itself,
+ * which has some basic behaviour patterns
+ * gained from extended class - AbilityBot
+ **/
 @Component
 public class CircusTickerBot extends AbilityBot {
 
@@ -27,6 +32,12 @@ public class CircusTickerBot extends AbilityBot {
         return 1L;
     }
 
+    /**
+     * Handles all responses of bot users.
+     * Calls ResponseHandler method to provide certain reactor to user messages.
+     *
+     * @param update the update received by Telegram's API
+     */
     @Override
     public void onUpdateReceived(Update update) {
         handler.replyToUserRequest(getChatId(update), update.getMessage());

@@ -1,5 +1,8 @@
 package com.example.circus_bot.workflow_states;
 
+/**
+ * Represents Telegram Bot workflow states
+ */
 public enum States {
     GREETING,
     START_ORDERING,

@@ -1,5 +1,9 @@
 package com.example.circus_bot.bot_phrases;
 
+/**
+ * Holds texts for each button used in
+ * Telegram CircusTicketBot
+ */
 public interface ButtonTexts {
     String START_ORDER_BUTTON = "Start circus ticket ordering";
     String INSERT_FIRST_AND_LASTNAME_BUTTON = "Insert first and last name ✍️";

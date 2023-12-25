@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Class responsible for updating ticket information
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -19,6 +22,13 @@ public class DataInsertionService {
 
     private final TicketRepository ticketRepository;
 
+    /**
+     * Parses and inserts in database datetime received from user
+     *
+     * @param chatId of user who writes to the bot
+     * @param message contains ticket data
+     * @throws IncorrectInsertedDataException when data is in a wrong format
+     */
     public void parseDateInfo(long chatId, Message message) throws IncorrectInsertedDataException {
         try {
             LocalDateTime localDateTime = LocalDateTime.parse(message.getText(), DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm"));
@@ -33,6 +43,13 @@ public class DataInsertionService {
         }
     }
 
+    /**
+     * Parses and inserts in database user phone number
+     *
+     * @param chatId of user who writes to the bot
+     * @param message contains ticket data
+     * @throws IncorrectInsertedDataException when data is in a wrong format
+     */
     public void parsePhoneNumberInfo(long chatId, Message message) throws IncorrectInsertedDataException {
         if (message.getText().matches("0[0-9]{9}")) {
             Ticket ticket = checkDataPresence(chatId);
@@ -43,6 +60,13 @@ public class DataInsertionService {
 
     }
 
+    /**
+     * Parses and inserts in database user's first and last names
+     *
+     * @param chatId of user who writes to the bot
+     * @param message contains ticket data
+     * @throws IncorrectInsertedDataException when data is in a wrong format
+     */
     public void parseFullName(long chatId, Message message) throws IncorrectInsertedDataException {
         if (message.getText().matches("[A-Z][a-z]{1,10} [A-Z][a-z]{1,10}")) {
             Ticket ticket = checkDataPresence(chatId);

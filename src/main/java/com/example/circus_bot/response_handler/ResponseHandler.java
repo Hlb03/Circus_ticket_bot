@@ -15,9 +15,11 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import java.util.Map;
 
 import static com.example.circus_bot.bot_phrases.ButtonTexts.*;
-import static com.example.circus_bot.utils.SendMessageUtils.createMessage;
 import static com.example.circus_bot.workflow_states.States.*;
 
+/**
+ * Class responsible for giving replies to bot users
+ */
 @Slf4j
 public class ResponseHandler {
     private final SilentSender sender;
@@ -26,7 +28,8 @@ public class ResponseHandler {
     private final CheckRequiredDataService requiredDataService;
     private final ResponseUserMessageService responseService;
 
-    public ResponseHandler(SilentSender sender, DBContext context, DataInsertionService insertionService, CheckRequiredDataService requiredDataService, ResponseUserMessageService responseService) {
+    public ResponseHandler(SilentSender sender, DBContext context, DataInsertionService insertionService,
+                           CheckRequiredDataService requiredDataService, ResponseUserMessageService responseService) {
         this.sender = sender;
         userState = context.getMap("CHAT_STATES");
         this.insertionService = insertionService;
@@ -34,13 +37,23 @@ public class ResponseHandler {
         this.responseService = responseService;
     }
 
+    /**
+     * Replies to user queries/messages and informs them what they can do.
+     * <p>
+     * According to the user state (information about which state of bot usage is user currently on),
+     * which updates each time user presses buttons or types
+     * returns certain response to a user with following instructions.
+     * <p>
+     * In case when a user enters ticket information in a wrong way notifies that it was done incorrect
+     * and should be done one more time.
+     *
+     * @param chatId of user who writes to the bot
+     * @param message informs who and what typed to the bot
+     */
     public void replyToUserRequest(long chatId, Message message) {
         userState.putIfAbsent(chatId, GREETING);
 
         log.info("MESSAGE AND CONTACT {} -> {}", message.getText(), message.getContact());
-//        if (message.getText().equalsIgnoreCase("/stop")) {
-//            TODO: add logic for stopping the bot
-//        }
 
         log.info("State: {}", userState.values());
         log.info("Message: {}", message);
@@ -102,6 +115,13 @@ public class ResponseHandler {
         }
     }
 
+    /**
+     * According to selected data insertion type (phone number, full name or datetime)
+     * sends message with required data pattern and update the user state.
+     *
+     * @param chatId of user who writes to the bot
+     * @param text that represents which info type user want to enter
+     */
     private void insertTicketInfo(long chatId, Message text) {
         switch (text.getText()) {
             case INSERT_FIRST_AND_LASTNAME_BUTTON -> {
@@ -119,19 +139,39 @@ public class ResponseHandler {
         }
     }
 
+    /**
+     * Executes sending message
+     *
+     * @param message including chatId and response to a user
+     */
     private void sendMessage(SendMessage message) {
         sender.execute(message);
     }
 
+    /**
+     * Sends message to a user to inform that data was successfully absorbed.
+     * <p>
+     * Check whether more data is required, if not -> sets a user to ticket receiving state.
+     * Recursively calls method replyToUserRequest() to response to the user state update.
+     *
+     * @param chatId of user who writes to the bot
+     * @param insertedDataName name of data supplied by user
+     */
     private void reactToUserDataInsertion(long chatId, String insertedDataName) {
         sendMessage(responseService.responseToDataInsertion(chatId, insertedDataName));
         updateUserWorkflowState(chatId, ORDERING);
 
-        if (requiredDataService.findButtonNamesForMissingData(chatId).length == 0)
+        if (requiredDataService.findButtonNamesForMissingData(chatId).size() == 0)
             updateUserWorkflowState(chatId, TICKET_OUTPUT);
         replyToUserRequest(chatId, new Message());
     }
 
+    /**
+     * Updates user state which makes a step forward in the bot working process
+     *
+     * @param chatId of user who writes to the bot
+     * @param nextState of bot workflow
+     */
     private void updateUserWorkflowState(long chatId, States nextState) {
         userState.put(chatId, nextState);
     }

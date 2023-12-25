@@ -1,5 +1,9 @@
 package com.example.circus_bot.bot_phrases;
 
+/**
+ * Has all phrases that Telegram Bot is using
+ * to communicate with user
+ */
 public interface Constants {
     String GREETING_MESSAGE = "Nice to see you in circus tickets ordering Telegram bot, ...!\n\nTo see all available options you may type /help command";
 
