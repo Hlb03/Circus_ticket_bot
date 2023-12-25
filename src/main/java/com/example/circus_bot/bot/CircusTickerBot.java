@@ -33,7 +33,7 @@ public class CircusTickerBot extends AbilityBot {
     }
 
     /**
-     * Handles all responses of bot users.
+     * Handles messages typed to bot
      * Calls ResponseHandler method to provide certain reactor to user messages.
      *
      * @param update the update received by Telegram's API
