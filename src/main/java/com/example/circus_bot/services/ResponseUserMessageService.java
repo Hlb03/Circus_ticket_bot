@@ -38,7 +38,6 @@ public class ResponseUserMessageService {
      * @return greeting message
      */
     public SendMessage instructNewUser(long chatId, String from) {
-        log.info("CHAT ID IS ---> {}", chatId);
         return createMessage(chatId, Constants.GREETING_MESSAGE.replace("...", from));
     }
 
@@ -135,8 +134,7 @@ public class ResponseUserMessageService {
      * @return message to be sent to bot operator
      */
     public SendMessage resendMessageToOperator(Message message) {
-        log.info("MESSAGE FROM USER: {}", message);
-        log.info("MESSAGE FROM: {}", message.getFrom());
+        log.info("Sending {} message from {} to the operator", message.getText(), message.getFrom().getLastName());
         return createMessage(
                 operatorChatId,
                 Constants.OPERATOR_MESSAGE

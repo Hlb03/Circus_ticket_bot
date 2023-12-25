@@ -53,12 +53,6 @@ public class ResponseHandler {
     public void replyToUserRequest(long chatId, Message message) {
         userState.putIfAbsent(chatId, GREETING);
 
-        log.info("MESSAGE AND CONTACT {} -> {}", message.getText(), message.getContact());
-
-        log.info("State: {}", userState.values());
-        log.info("Message: {}", message);
-        log.info("CHAT ID: {}", chatId);
-        log.info("CHECK USER STATE: {}", userState.get(chatId));
         switch (userState.get(chatId)) {
             case GREETING -> {
                 sendMessage(responseService.instructNewUser(chatId, message.getFrom().getFirstName()));
@@ -161,8 +155,10 @@ public class ResponseHandler {
         sendMessage(responseService.responseToDataInsertion(chatId, insertedDataName));
         updateUserWorkflowState(chatId, ORDERING);
 
-        if (requiredDataService.findButtonNamesForMissingData(chatId).size() == 0)
+        if (requiredDataService.findButtonNamesForMissingData(chatId).size() == 0) {
             updateUserWorkflowState(chatId, TICKET_OUTPUT);
+            log.info("User from chat with id {} has successfully entered all data", chatId);
+        }
         replyToUserRequest(chatId, new Message());
     }
 
@@ -174,5 +170,6 @@ public class ResponseHandler {
      */
     private void updateUserWorkflowState(long chatId, States nextState) {
         userState.put(chatId, nextState);
+        log.info("Updating user state with id {} to state {}", chatId, nextState);
     }
 }

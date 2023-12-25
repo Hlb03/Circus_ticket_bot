@@ -35,10 +35,9 @@ public class DataInsertionService {
             Ticket ticket = checkDataPresence(chatId);
             ticket.setDateTime(localDateTime);
             ticketRepository.save(ticket);
-            log.info("PARSED DATE: {}", localDateTime);
-
-            log.info("COMPARING DATES: {}", LocalDateTime.now().isBefore(localDateTime));
+            log.info("Datetime {} was successfully save to {} user", localDateTime, chatId);
         } catch (DateTimeParseException e) {
+            log.info("User with id {} mismatched datetime pattern. Provided value -> {}", chatId, message.getText());
             throw new IncorrectInsertedDataException(String.format("Date was inserted in a wrong way, %s\n\n", message.getText()));
         }
     }
@@ -55,8 +54,12 @@ public class DataInsertionService {
             Ticket ticket = checkDataPresence(chatId);
             ticket.setPhoneNumber(message.getText());
             ticketRepository.save(ticket);
-        } else throw new
-                IncorrectInsertedDataException(String.format("Phone number provided by you (%s), doesn't match patter\n\n", message.getText()));
+            log.info("Phone number {} was added to user with id {}", message.getText(), chatId);
+        } else {
+            log.info("User {} provided phone number with wrong number -> {}", chatId, message.getText());
+            throw new
+                    IncorrectInsertedDataException(String.format("Phone number provided by you (%s), doesn't match patter\n\n", message.getText()));
+        }
 
     }
 
@@ -72,8 +75,12 @@ public class DataInsertionService {
             Ticket ticket = checkDataPresence(chatId);
             ticket.setFullName(message.getText());
             ticketRepository.save(ticket);
-        } else throw new
-                IncorrectInsertedDataException(String.format("Entered first and last name (%s) are not in the suitable format\n\n", message.getText()));
+            log.info("Full name {} was assigned to user {}", message.getText(), chatId);
+        } else {
+            log.info("Wrong full name {} to user with id {}", message.getText(), chatId);
+            throw new
+                    IncorrectInsertedDataException(String.format("Entered first and last name (%s) are not in the suitable format\n\n", message.getText()));
+        }
     }
 
     private Ticket checkDataPresence(long chatId) {

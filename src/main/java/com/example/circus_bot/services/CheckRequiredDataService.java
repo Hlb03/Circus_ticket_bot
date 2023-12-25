@@ -3,6 +3,7 @@ package com.example.circus_bot.services;
 import com.example.circus_bot.entity.Ticket;
 import com.example.circus_bot.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import static com.example.circus_bot.bot_phrases.ButtonTexts.*;
 /**
  * Class that provides required buttons to fulfill all card data
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CheckRequiredDataService {
@@ -32,7 +34,7 @@ public class CheckRequiredDataService {
     public List<String> findButtonNamesForMissingData(long chatId) {
         Optional<Ticket> ticket = ticketRepository.getTicketByChatId(chatId);
         List<String> buttons = findNullFields(ticket);
-        System.out.println("BUTTONS: " + buttons);
+        log.info("Required buttons for the user ({}) are {}", chatId, buttons);
 
         return buttons;
     }
