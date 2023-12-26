@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  telegram_bot:
+    container_name: circus_ticket_bot
+    image: hlb03/circus_bot:v1
+    environment:
+      - OPERATOR_TELEGRAM_ID=710463881 #Place your own Telegram id if you wonna be an admin
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+  mongodb:
+    container_name: mongo_db
+    image: mongo
+    environment:
+      - MONGO_INITDB_DATABASE=circus_tickets
+    ports:
+      - "27017:27017"
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/test --quiet
