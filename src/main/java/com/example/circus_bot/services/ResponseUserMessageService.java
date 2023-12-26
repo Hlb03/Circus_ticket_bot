@@ -27,8 +27,9 @@ import static com.example.circus_bot.utils.UserInfoUtil.getUsernameOrFullName;
 public class ResponseUserMessageService {
 
     private final TicketRepository ticketRepository;
-    @Value("${telegram.operator.id}")
-    private long operatorChatId;
+
+    @Value("${OPERATOR_TELEGRAM_ID}")
+    private long operatorId;
 
     /**
      * Greets a user after his/her first appeal to the bot
@@ -136,7 +137,7 @@ public class ResponseUserMessageService {
     public SendMessage resendMessageToOperator(Message message) {
         log.info("Sending {} message from {} to the operator", message.getText(), message.getFrom().getLastName());
         return createMessage(
-                operatorChatId,
+                operatorId,
                 Constants.OPERATOR_MESSAGE
                         .replace("user_info",
                                 getUsernameOrFullName(message)
