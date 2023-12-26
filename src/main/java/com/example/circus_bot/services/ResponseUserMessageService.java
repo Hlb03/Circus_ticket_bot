@@ -21,8 +21,8 @@ import static com.example.circus_bot.utils.UserInfoUtil.getUsernameOrFullName;
 /**
  * Class contains whole circus ticket bot business logic
  */
-@Service
 @Slf4j
+@Service
 @RequiredArgsConstructor
 public class ResponseUserMessageService {
 

@@ -6,6 +6,7 @@ import com.example.circus_bot.repository.TicketRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
 import java.time.LocalDateTime;
@@ -16,7 +17,7 @@ import java.time.format.DateTimeParseException;
  * Class responsible for updating ticket information
  */
 @Slf4j
-@Component
+@Service
 @RequiredArgsConstructor
 public class DataInsertionService {
 

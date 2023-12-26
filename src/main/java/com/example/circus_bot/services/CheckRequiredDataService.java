@@ -30,7 +30,6 @@ public class CheckRequiredDataService {
      * @return a list of button names that should be mandatory pressed
      * for ticket ordering
      */
-    // TODO: remove SOUT!!!
     public List<String> findButtonNamesForMissingData(long chatId) {
         Optional<Ticket> ticket = ticketRepository.getTicketByChatId(chatId);
         List<String> buttons = findNullFields(ticket);
